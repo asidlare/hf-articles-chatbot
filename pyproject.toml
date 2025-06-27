@@ -1,0 +1,78 @@
+[build-system]
+requires = ["hatchling", "tomli"]
+build-backend = "hatchling.build"
+
+[project]
+name = "hf-articles-chatbot"
+version = "0.1.0"
+description = ""
+authors = [
+    { name = "Anna Sidlarewicz", email = "asidlare@gmail.com" }
+]
+requires-python = ">=3.12.11"
+dependencies = [
+    "mcp[cli]",
+    "pydantic-ai",
+    "pydantic-ai[logfire]",
+    "pydantic-ai-slim[openai]",
+    "fastapi",
+    "gradio",
+    "logfire[openai]",
+    "logfire[httpx]",
+]
+
+[project.optional-dependencies]
+dev = [
+    "mypy",
+    "pytest",
+    "pytest-asyncio",
+    "coverage",
+    "pytest-cov",
+    "pytest-mock",
+    "inline-snapshot",
+    "dirty-equals",
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["app"]
+
+[tool.hatch.build]
+include = [
+    "app/**/*.py",
+    "app/**/*.pyi",
+]
+exclude = [
+    "tests/**",
+]
+
+[tool.pytest.ini_options]
+testpaths = "tests"
+python_files = "test_*.py"
+python_functions = "test_*"
+python_classes = "Test* *Tests"
+asyncio_default_fixture_loop_scope = "session"
+asyncio_mode = "auto"
+pythonpath = ["."]
+addopts = [
+    "--strict-markers",
+    "--strict-config",
+    "-ra"
+]
+
+[tool.mypy]
+check_untyped_defs = true
+namespace_packages = true
+pretty = true
+show_error_context = true
+exclude = ".venv"
+
+[[tool.mypy.overrides]]
+module = "tests.*"
+ignore_errors = true
+
+[[tool.mypy.overrides]]
+module = [
+    "backoff.*",
+    "opentraining.*",
+]
+ignore_missing_imports = true

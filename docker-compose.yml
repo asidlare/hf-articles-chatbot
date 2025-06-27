@@ -1,0 +1,62 @@
+services:
+  db:
+    image: pgvector/pgvector:pg17
+    container_name: hf-search-mcp-db
+    volumes:
+      - ./dump.sql:/docker-entrypoint-initdb.d/dump.sql
+    environment:
+      POSTGRES_HOST: db:5432
+      POSTGRES_NAME: postgres
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    networks:
+      - local_hf_search
+    healthcheck: # for depends_on:service_healthy
+      test: [ "CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_NAME" ]
+      interval: 5s
+      timeout: 5s
+      retries: 5 # Number of retries before marking as unhealthy
+
+  mcp-server:
+    image: hf-articles-search-mcp-backend
+    container_name: hf-search-mcp-server
+    ports:
+      - "8000:8000"
+    environment:
+      - POSTGRES_HOST=db:5432
+      - POSTGRES_NAME=postgres
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    depends_on:
+      db:
+        condition: service_healthy # Wait until the DB's healthcheck passes
+    networks:
+      - local_hf_search
+
+  chatbot:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    container_name: hf-search-chatbot
+    command: python app/gradio_chatbot.py
+    # command: tail -f /dev/null
+    volumes:
+      - .:/code
+    ports:
+      - "7860:7860"
+    environment:
+      - HF_SEARCH_MCP_SERVER_URL=http://mcp-server:8000/mcp
+      - LOGFIRE_SEND_TO_LOGFIRE=false
+    depends_on:
+      - mcp-server
+    restart: unless-stopped
+    networks:
+      - local_hf_search
+
+networks:
+  local_hf_search:
+    name: hf_search_network
