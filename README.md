@@ -38,7 +38,7 @@ When a question is asked:
 * 2 sets of articles are generated, each set limited to 10 articles - one based on embeddings and one based on tags
 * 2 sets are joined together and there can be from 10 to 20 articles in the result, because there can be common articles
 * LLM uses headline, summarization, key insights, tags to find articles most relevant to the question
-* the final result from LLM includes a synthesized summary (answer) and a few details about bet matching articles
+* the final result from LLM includes a synthesized summary (answer) and a few details about matching articles
 * see [example answer](#example-question-and-answer)
 
 ### Info about an article after providing a link url
