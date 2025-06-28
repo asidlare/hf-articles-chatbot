@@ -7,6 +7,14 @@ MCP server is implemented in [hf-articles-search](https://github.com/asidlare/hf
 Both projects use ["News Category Dataset"](https://www.kaggle.com/datasets/rmisra/news-category-dataset/data)
 from kaggle.
 
+## Kaggle `News Category Dataset`
+
+You can find `News Category Datase` [here](https://www.kaggle.com/datasets/rmisra/news-category-dataset/data)
+
+If you'd like to learn more about this dataset and its author, check:
+1. Misra, Rishabh. "News Category Dataset." arXiv preprint arXiv:2209.11429 (2022).
+2. Misra, Rishabh and Jigyasa Grover. "Sculpting Data for ML: The first act of Machine Learning." ISBN 9798585463570 (2021).
+
 ## Goal
 
 The goal was to implement a chatbot who works in collaboration with MCP server and:
